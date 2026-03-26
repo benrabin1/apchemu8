@@ -330,8 +330,7 @@ def buffers():
             v_buf = get_float("Buffer vol (L): ")
             c_add = get_float("Strong soln conc(M): ")
             v_add = get_float("Strong soln vol (L): ")
-            bad = (ka is None or a_c is None or ha_c is None
-                   or v_buf is None or c_add is None or v_add is None)
+            bad = ka is None or a_c is None or ha_c is None or v_buf is None or c_add is None or v_add is None
             if bad:
                 continue
             if ka <= 0 or a_c <= 0 or ha_c <= 0:
