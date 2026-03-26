@@ -2,7 +2,7 @@ import math
 
 KW = 1.0e-14
 
-# ── Utilities ────────────────────────────────────
+# -- Utilities --
 
 def clr():
     print("\n" * 10)
@@ -49,7 +49,7 @@ def show_all(ph):
     print("[H+]= " + fmt(h) + " M")
     print("[OH-]=" + fmt(oh) + " M")
 
-# ── Section 1: pH/pOH Basics ─────────────────────
+# -- Section 1: pH/pOH Basics --
 
 def ph_basics():
     while True:
@@ -108,7 +108,7 @@ def ph_basics():
             show_all(v)
             pause()
 
-# ── Section 2: Strong Acids ───────────────────────
+# -- Section 2: Strong Acids --
 
 def strong_acids():
     hdr("Strong Acids")
@@ -127,7 +127,7 @@ def strong_acids():
     show_all(ph)
     pause()
 
-# ── Section 3: Strong Bases ───────────────────────
+# -- Section 3: Strong Bases --
 
 def strong_bases():
     while True:
@@ -158,7 +158,7 @@ def strong_bases():
             show_all(ph)
             pause()
 
-# ── Section 4: Weak Acids ─────────────────────────
+# -- Section 4: Weak Acids --
 
 def weak_acids():
     while True:
@@ -198,7 +198,7 @@ def weak_acids():
                 print("(>5%: use quadratic)")
             pause()
 
-# ── Section 5: Weak Bases ─────────────────────────
+# -- Section 5: Weak Bases --
 
 def weak_bases():
     while True:
@@ -231,7 +231,7 @@ def weak_bases():
                 print("% ion= " + str(round(pct, 2)) + "%")
             pause()
 
-# ── Section 6: Buffers ────────────────────────────
+# -- Section 6: Buffers --
 
 def buffers():
     while True:
@@ -303,7 +303,7 @@ def buffers():
                 print("New pH = " + str(round(ph, 4)))
             pause()
 
-# ── Section 7: Titrations ─────────────────────────
+# -- Section 7: Titrations --
 
 def _sa_sb():
     hdr("Strong A + Strong B")
@@ -401,7 +401,7 @@ def titrations():
         elif ch == "2":
             _wa_sb()
 
-# ── Section 8: Ka/Kb Relationships ───────────────
+# -- Section 8: Ka/Kb Relationships --
 
 def ka_kb_rel():
     while True:
@@ -449,7 +449,7 @@ def ka_kb_rel():
             print("pKa + pKb = 14.00")
             pause()
 
-# ── Section 9: Polyprotic Acids ───────────────────
+# -- Section 9: Polyprotic Acids --
 
 PRESET_NAMES = ["H2CO3", "H2SO3", "H3PO4", "H2S"]
 PRESET_KA1   = [4.3e-7,  1.5e-2,  7.5e-3,  1.0e-7]
@@ -559,7 +559,7 @@ def polyprotic():
             else:
                 _diprotic(PRESET_KA1[idx], PRESET_KA2[idx], c)
 
-# ── Section 10: Reference ─────────────────────────
+# -- Section 10: Reference --
 
 def reference():
     hdr("Ka Reference")
@@ -602,7 +602,7 @@ def reference():
     print("Half-EP: pH = pKa")
     pause()
 
-# ── Main Menu ─────────────────────────────────────
+# -- Main Menu --
 
 def main():
     while True:
