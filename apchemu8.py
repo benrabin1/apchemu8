@@ -1,6 +1,31 @@
-from math import log10, sqrt, floor, log
-
 KW = 1.0e-14
+
+def sqrt(x):
+    return x ** 0.5
+
+def floor(x):
+    n = int(x)
+    if float(n) > x:
+        n = n - 1
+    return n
+
+def log10(x):
+    y = 0
+    while x >= 10.0:
+        x = x / 10.0
+        y = y + 1
+    while x < 1.0:
+        x = x * 10.0
+        y = y - 1
+    lo = 0.0
+    hi = 1.0
+    for i in range(40):
+        mid = (lo + hi) * 0.5
+        if 10.0 ** mid <= x:
+            lo = mid
+        else:
+            hi = mid
+    return float(y) + (lo + hi) * 0.5
 
 # -- Utilities --
 
