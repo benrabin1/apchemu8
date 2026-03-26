@@ -1,4 +1,4 @@
-from math import log10, sqrt, floor, log, pow as mpow
+from math import log10, sqrt, floor, log
 
 KW = 1.0e-14
 
