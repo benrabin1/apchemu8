@@ -1,4 +1,4 @@
-import math
+from math import log10, sqrt, floor, log, pow as mpow
 
 KW = 1.0e-14
 
@@ -28,15 +28,15 @@ def quadratic(a, b, c):
     disc = b * b - 4.0 * a * c
     if disc < 0:
         return None
-    r1 = (-b + math.sqrt(disc)) / (2.0 * a)
-    r2 = (-b - math.sqrt(disc)) / (2.0 * a)
+    r1 = (-b + sqrt(disc)) / (2.0 * a)
+    r2 = (-b - sqrt(disc)) / (2.0 * a)
     return r1 if r1 > 0 else r2
 
 def fmt(v):
     # Scientific notation string, 3 sig figs
     if v == 0:
         return "0"
-    exp = int(math.floor(math.log10(abs(v))))
+    exp = int(floor(log10(abs(v))))
     man = v / (10.0 ** exp)
     return str(round(man, 3)) + "e" + str(exp)
 
@@ -69,7 +69,7 @@ def ph_basics():
             v = get_float("[H+] (mol/L): ")
             if v is None or v <= 0:
                 print("Must be > 0"); pause(); continue
-            ph = -math.log10(v)
+            ph = -log10(v)
             show_all(ph)
             pause()
         elif ch == "2":
@@ -87,7 +87,7 @@ def ph_basics():
             v = get_float("[OH-] (mol/L): ")
             if v is None or v <= 0:
                 print("Must be > 0"); pause(); continue
-            poh = -math.log10(v)
+            poh = -log10(v)
             ph  = 14.0 - poh
             show_all(ph)
             pause()
@@ -119,11 +119,11 @@ def strong_acids():
     if c is None or c <= 0:
         print("Invalid."); pause(); return
     if c < 1e-7:
-        h = (c + math.sqrt(c * c + 4.0 * KW)) / 2.0
+        h = (c + sqrt(c * c + 4.0 * KW)) / 2.0
         print("(water correction)")
     else:
         h = c
-    ph = -math.log10(h)
+    ph = -log10(h)
     show_all(ph)
     pause()
 
@@ -151,9 +151,9 @@ def strong_bases():
                 print("Invalid."); pause(); continue
             oh = c if ch == "1" else 2.0 * c
             if oh < 1e-7:
-                oh = (oh + math.sqrt(oh * oh + 4.0 * KW)) / 2.0
+                oh = (oh + sqrt(oh * oh + 4.0 * KW)) / 2.0
                 print("(water correction)")
-            poh = -math.log10(oh)
+            poh = -log10(oh)
             ph  = 14.0 - poh
             show_all(ph)
             pause()
@@ -184,12 +184,12 @@ def weak_acids():
             x = quadratic(1.0, ka, -ka * c)
             if x is None or x <= 0:
                 print("No solution."); pause(); continue
-            ph  = -math.log10(x)
+            ph  = -log10(x)
             pct = (x / c) * 100.0
             show_all(ph)
             if ch == "2":
                 print("% ion= " + str(round(pct, 2)) + "%")
-            apx = math.sqrt(ka * c)
+            apx = sqrt(ka * c)
             print("Approx [H+]:")
             print(" " + fmt(apx))
             if pct < 5.0:
@@ -223,7 +223,7 @@ def weak_bases():
             x = quadratic(1.0, kb, -kb * c)
             if x is None or x <= 0:
                 print("No solution."); pause(); continue
-            poh = -math.log10(x)
+            poh = -log10(x)
             ph  = 14.0 - poh
             pct = (x / c) * 100.0
             show_all(ph)
@@ -253,8 +253,8 @@ def buffers():
             ha = get_float("[HA] (M): ")
             if a is None or ha is None or a <= 0 or ha <= 0:
                 print("Invalid."); pause(); continue
-            pka = -math.log10(ka)
-            ph  = pka + math.log10(a / ha)
+            pka = -log10(ka)
+            ph  = pka + log10(a / ha)
             print("pKa = " + str(round(pka, 4)))
             print("pH  = " + str(round(ph,  4)))
             pause()
@@ -275,7 +275,7 @@ def buffers():
                 continue
             if ka <= 0 or a_c <= 0 or ha_c <= 0 or v_buf <= 0 or c_add <= 0 or v_add <= 0:
                 print("All values must be>0"); pause(); continue
-            pka    = -math.log10(ka)
+            pka    = -log10(ka)
             mol_a  = a_c  * v_buf
             mol_ha = ha_c * v_buf
             mol_x  = c_add * v_add
@@ -289,17 +289,17 @@ def buffers():
             if new_a <= 0:
                 print("Buffer exceeded!")
                 excess = -new_a / v_tot
-                ph = -math.log10(excess)
+                ph = -log10(excess)
                 print("Excess H+:")
                 print("pH = " + str(round(ph, 4)))
             elif new_ha <= 0:
                 print("Buffer exceeded!")
                 excess_oh = -new_ha / v_tot
-                ph = 14.0 + math.log10(excess_oh)
+                ph = 14.0 + log10(excess_oh)
                 print("Excess OH-:")
                 print("pH = " + str(round(ph, 4)))
             else:
-                ph = pka + math.log10(new_a / new_ha)
+                ph = pka + log10(new_a / new_ha)
                 print("New pH = " + str(round(ph, 4)))
             pause()
 
@@ -323,13 +323,13 @@ def _sa_sb():
         print("At EP: pH = 7.00")
     elif vb < vep:
         h  = (ca * va - cb * vb) / vt
-        ph = -math.log10(h)
+        ph = -log10(h)
         print("Before EP")
         print("[H+]= " + fmt(h) + " M")
         print("pH  = " + str(round(ph, 4)))
     else:
         oh  = (cb * vb - ca * va) / vt
-        poh = -math.log10(oh)
+        poh = -log10(oh)
         ph  = 14.0 - poh
         print("After EP")
         print("[OH-]=" + fmt(oh) + " M")
@@ -348,14 +348,14 @@ def _wa_sb():
         return
     if ka <= 0 or ca <= 0 or va <= 0 or cb <= 0 or vb < 0:
         print("Invalid."); pause(); return
-    pka = -math.log10(ka)
+    pka = -log10(ka)
     vep = ca * va / cb
     vt  = va + vb
     print("V_ep=" + str(round(vep * 1000, 2)) + " mL")
     print("pKa = " + str(round(pka, 4)))
     if vb == 0.0:
         x  = quadratic(1.0, ka, -ka * ca)
-        ph = -math.log10(x)
+        ph = -log10(x)
         print("Weak acid only")
         print("pH = " + str(round(ph, 4)))
     elif abs(vb - vep / 2.0) < 1e-9:
@@ -367,7 +367,7 @@ def _wa_sb():
         x       = quadratic(1.0, kb_conj, -kb_conj * conc_a)
         if x is None or x <= 0:
             print("Hydrolysis error"); pause(); return
-        poh = -math.log10(x)
+        poh = -log10(x)
         ph  = 14.0 - poh
         print("At EP: A- hydrolysis")
         print("Kb=" + fmt(kb_conj))
@@ -375,12 +375,12 @@ def _wa_sb():
     elif vb < vep:
         mol_ha = ca * va - cb * vb
         mol_a  = cb * vb
-        ph     = pka + math.log10(mol_a / mol_ha)
+        ph     = pka + log10(mol_a / mol_ha)
         print("Buffer region")
         print("pH = " + str(round(ph, 4)))
     else:
         oh  = (cb * vb - ca * va) / vt
-        poh = -math.log10(oh)
+        poh = -log10(oh)
         ph  = 14.0 - poh
         print("After EP: excess OH-")
         print("[OH-]=" + fmt(oh) + " M")
@@ -420,8 +420,8 @@ def ka_kb_rel():
             if ka is None or ka <= 0:
                 print("Invalid."); pause(); continue
             kb  = KW / ka
-            pka = -math.log10(ka)
-            pkb = -math.log10(kb)
+            pka = -log10(ka)
+            pkb = -log10(kb)
             print("Kb  = " + fmt(kb))
             print("pKa = " + str(round(pka, 4)))
             print("pKb = " + str(round(pkb, 4)))
@@ -433,8 +433,8 @@ def ka_kb_rel():
             if kb is None or kb <= 0:
                 print("Invalid."); pause(); continue
             ka  = KW / kb
-            pka = -math.log10(ka)
-            pkb = -math.log10(kb)
+            pka = -log10(ka)
+            pkb = -log10(kb)
             print("Ka  = " + fmt(ka))
             print("pKa = " + str(round(pka, 4)))
             print("pKb = " + str(round(pkb, 4)))
@@ -469,7 +469,7 @@ def _diprotic(ka1, ka2, c):
     if y is None:
         y = 0.0
     h_tot = h1 + y
-    ph    = -math.log10(h_tot)
+    ph    = -log10(h_tot)
     print("[H+]2 = " + fmt(y))
     print("[H+]total=" + fmt(h_tot))
     show_all(ph)
@@ -498,7 +498,7 @@ def _triprotic(ka1, ka2, ka3, c):
         print("[H+]3 = " + fmt(z))
     else:
         h_tot = h2
-    ph = -math.log10(h_tot)
+    ph = -log10(h_tot)
     show_all(ph)
     pause()
 
