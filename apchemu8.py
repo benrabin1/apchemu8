@@ -30,10 +30,11 @@ def quadratic(a, b, c):
         return None
     r1 = (-b + sqrt(disc)) / (2.0 * a)
     r2 = (-b - sqrt(disc)) / (2.0 * a)
-    return r1 if r1 > 0 else r2
+    if r1 > 0:
+        return r1
+    return r2
 
 def fmt(v):
-    # Scientific notation string, 3 sig figs
     if v == 0:
         return "0"
     exp = int(floor(log10(abs(v))))
@@ -68,7 +69,9 @@ def ph_basics():
             print("pH = -log10([H+])")
             v = get_float("[H+] (mol/L): ")
             if v is None or v <= 0:
-                print("Must be > 0"); pause(); continue
+                print("Must be > 0")
+                pause()
+                continue
             ph = -log10(v)
             show_all(ph)
             pause()
@@ -77,7 +80,9 @@ def ph_basics():
             print("[H+] = 10^(-pH)")
             v = get_float("pH: ")
             if v is None or v < 0 or v > 14:
-                print("pH must be 0-14"); pause(); continue
+                print("pH must be 0-14")
+                pause()
+                continue
             show_all(v)
             pause()
         elif ch == "3":
@@ -86,7 +91,9 @@ def ph_basics():
             print("pH=14-pOH")
             v = get_float("[OH-] (mol/L): ")
             if v is None or v <= 0:
-                print("Must be > 0"); pause(); continue
+                print("Must be > 0")
+                pause()
+                continue
             poh = -log10(v)
             ph  = 14.0 - poh
             show_all(ph)
@@ -96,7 +103,9 @@ def ph_basics():
             print("pH = 14 - pOH")
             v = get_float("pOH: ")
             if v is None or v < 0 or v > 14:
-                print("pOH must be 0-14"); pause(); continue
+                print("pOH must be 0-14")
+                pause()
+                continue
             show_all(14.0 - v)
             pause()
         elif ch == "5":
@@ -104,7 +113,9 @@ def ph_basics():
             print("pOH=14-pH")
             v = get_float("pH: ")
             if v is None or v < 0 or v > 14:
-                print("pH must be 0-14"); pause(); continue
+                print("pH must be 0-14")
+                pause()
+                continue
             show_all(v)
             pause()
 
@@ -117,7 +128,9 @@ def strong_acids():
     print("Dilute fix if C<1e-7")
     c = get_float("Conc (mol/L): ")
     if c is None or c <= 0:
-        print("Invalid."); pause(); return
+        print("Invalid.")
+        pause()
+        return
     if c < 1e-7:
         h = (c + sqrt(c * c + 4.0 * KW)) / 2.0
         print("(water correction)")
@@ -138,7 +151,7 @@ def strong_bases():
         ch = input("Choice: ")
         if ch == "0":
             break
-        elif ch in ("1", "2"):
+        elif ch == "1" or ch == "2":
             hdr("Strong Bases")
             if ch == "1":
                 print("MOH -> M+ + OH-")
@@ -148,8 +161,13 @@ def strong_bases():
                 print("[OH-] = 2*C")
             c = get_float("Conc (mol/L): ")
             if c is None or c <= 0:
-                print("Invalid."); pause(); continue
-            oh = c if ch == "1" else 2.0 * c
+                print("Invalid.")
+                pause()
+                continue
+            if ch == "1":
+                oh = c
+            else:
+                oh = 2.0 * c
             if oh < 1e-7:
                 oh = (oh + sqrt(oh * oh + 4.0 * KW)) / 2.0
                 print("(water correction)")
@@ -172,18 +190,24 @@ def weak_acids():
         ch = input("Choice: ")
         if ch == "0":
             break
-        elif ch in ("1", "2"):
+        elif ch == "1" or ch == "2":
             hdr("Weak Acid Calc")
             print("x^2 + Ka*x - Ka*C=0")
             ka = get_float("Ka: ")
             if ka is None or ka <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             c = get_float("Initial [HA] (M): ")
             if c is None or c <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             x = quadratic(1.0, ka, -ka * c)
             if x is None or x <= 0:
-                print("No solution."); pause(); continue
+                print("No solution.")
+                pause()
+                continue
             ph  = -log10(x)
             pct = (x / c) * 100.0
             show_all(ph)
@@ -211,18 +235,24 @@ def weak_bases():
         ch = input("Choice: ")
         if ch == "0":
             break
-        elif ch in ("1", "2"):
+        elif ch == "1" or ch == "2":
             hdr("Weak Base Calc")
             print("x^2 + Kb*x - Kb*C=0")
             kb = get_float("Kb: ")
             if kb is None or kb <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             c = get_float("Initial [B] (M): ")
             if c is None or c <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             x = quadratic(1.0, kb, -kb * c)
             if x is None or x <= 0:
-                print("No solution."); pause(); continue
+                print("No solution.")
+                pause()
+                continue
             poh = -log10(x)
             ph  = 14.0 - poh
             pct = (x / c) * 100.0
@@ -248,33 +278,45 @@ def buffers():
             hdr("Henderson-Hasselbalch")
             ka = get_float("Ka: ")
             if ka is None or ka <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             a  = get_float("[A-] (M): ")
             ha = get_float("[HA] (M): ")
             if a is None or ha is None or a <= 0 or ha <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             pka = -log10(ka)
             ph  = pka + log10(a / ha)
             print("pKa = " + str(round(pka, 4)))
             print("pH  = " + str(round(ph,  4)))
             pause()
-        elif ch in ("2", "3"):
+        elif ch == "2" or ch == "3":
             if ch == "2":
                 hdr("Buffer + Strong Acid")
                 print("H+ + A- -> HA")
             else:
                 hdr("Buffer + Strong Base")
                 print("OH- + HA -> A- + H2O")
-            ka     = get_float("Ka: ")
-            a_c    = get_float("[A-] initial (M): ")
-            ha_c   = get_float("[HA] initial (M): ")
-            v_buf  = get_float("Buffer vol (L): ")
-            c_add  = get_float("Strong soln conc(M): ")
-            v_add  = get_float("Strong soln vol (L): ")
-            if None in (ka, a_c, ha_c, v_buf, c_add, v_add):
+            ka    = get_float("Ka: ")
+            a_c   = get_float("[A-] initial (M): ")
+            ha_c  = get_float("[HA] initial (M): ")
+            v_buf = get_float("Buffer vol (L): ")
+            c_add = get_float("Strong soln conc(M): ")
+            v_add = get_float("Strong soln vol (L): ")
+            bad = (ka is None or a_c is None or ha_c is None
+                   or v_buf is None or c_add is None or v_add is None)
+            if bad:
                 continue
-            if ka <= 0 or a_c <= 0 or ha_c <= 0 or v_buf <= 0 or c_add <= 0 or v_add <= 0:
-                print("All values must be>0"); pause(); continue
+            if ka <= 0 or a_c <= 0 or ha_c <= 0:
+                print("All values must be>0")
+                pause()
+                continue
+            if v_buf <= 0 or c_add <= 0 or v_add <= 0:
+                print("All values must be>0")
+                pause()
+                continue
             pka    = -log10(ka)
             mol_a  = a_c  * v_buf
             mol_ha = ha_c * v_buf
@@ -312,10 +354,12 @@ def _sa_sb():
     va = get_float("V_acid (L): ")
     cb = get_float("C_base (M): ")
     vb = get_float("V_base added (L): ")
-    if None in (ca, va, cb, vb):
+    if ca is None or va is None or cb is None or vb is None:
         return
     if ca <= 0 or va <= 0 or cb <= 0 or vb < 0:
-        print("Invalid."); pause(); return
+        print("Invalid.")
+        pause()
+        return
     vep = ca * va / cb
     vt  = va + vb
     print("V_ep=" + str(round(vep * 1000, 2)) + " mL")
@@ -344,10 +388,12 @@ def _wa_sb():
     va = get_float("V_acid (L): ")
     cb = get_float("C_base (M): ")
     vb = get_float("V_base added (L): ")
-    if None in (ka, ca, va, cb, vb):
+    if ka is None or ca is None or va is None or cb is None or vb is None:
         return
     if ka <= 0 or ca <= 0 or va <= 0 or cb <= 0 or vb < 0:
-        print("Invalid."); pause(); return
+        print("Invalid.")
+        pause()
+        return
     pka = -log10(ka)
     vep = ca * va / cb
     vt  = va + vb
@@ -366,7 +412,9 @@ def _wa_sb():
         kb_conj = KW / ka
         x       = quadratic(1.0, kb_conj, -kb_conj * conc_a)
         if x is None or x <= 0:
-            print("Hydrolysis error"); pause(); return
+            print("Hydrolysis error")
+            pause()
+            return
         poh = -log10(x)
         ph  = 14.0 - poh
         print("At EP: A- hydrolysis")
@@ -418,7 +466,9 @@ def ka_kb_rel():
             hdr("Ka -> Kb")
             ka = get_float("Ka: ")
             if ka is None or ka <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             kb  = KW / ka
             pka = -log10(ka)
             pkb = -log10(kb)
@@ -431,7 +481,9 @@ def ka_kb_rel():
             hdr("Kb -> Ka")
             kb = get_float("Kb: ")
             if kb is None or kb <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             ka  = KW / kb
             pka = -log10(ka)
             pkb = -log10(kb)
@@ -461,7 +513,9 @@ def _diprotic(ka1, ka2, c):
     print("Step 1: H2A->H+ + HA-")
     x = quadratic(1.0, ka1, -ka1 * c)
     if x is None or x <= 0:
-        print("Step 1 error."); pause(); return
+        print("Step 1 error.")
+        pause()
+        return
     h1 = x
     print("[H+]1 = " + fmt(h1))
     print("Step 2: HA-->H+ + A2-")
@@ -480,7 +534,9 @@ def _triprotic(ka1, ka2, ka3, c):
     print("Step 1: H3A->H+ + H2A-")
     x = quadratic(1.0, ka1, -ka1 * c)
     if x is None or x <= 0:
-        print("Step 1 error."); pause(); return
+        print("Step 1 error.")
+        pause()
+        return
     h1 = x
     print("[H+]1 = " + fmt(h1))
     print("Step 2: H2A-->H+ + HA2-")
@@ -518,8 +574,14 @@ def polyprotic():
             ka1 = get_float("Ka1: ")
             ka2 = get_float("Ka2: ")
             c   = get_float("Initial [H2A] (M): ")
-            if None in (ka1, ka2, c) or ka1<=0 or ka2<=0 or c<=0:
-                print("Invalid."); pause(); continue
+            if ka1 is None or ka2 is None or c is None:
+                print("Invalid.")
+                pause()
+                continue
+            if ka1 <= 0 or ka2 <= 0 or c <= 0:
+                print("Invalid.")
+                pause()
+                continue
             _diprotic(ka1, ka2, c)
         elif ch == "2":
             hdr("Triprotic")
@@ -528,8 +590,14 @@ def polyprotic():
             ka2 = get_float("Ka2: ")
             ka3 = get_float("Ka3: ")
             c   = get_float("Initial [H3A] (M): ")
-            if None in (ka1,ka2,ka3,c) or ka1<=0 or ka2<=0 or ka3<=0 or c<=0:
-                print("Invalid."); pause(); continue
+            if ka1 is None or ka2 is None or ka3 is None or c is None:
+                print("Invalid.")
+                pause()
+                continue
+            if ka1 <= 0 or ka2 <= 0 or ka3 <= 0 or c <= 0:
+                print("Invalid.")
+                pause()
+                continue
             _triprotic(ka1, ka2, ka3, c)
         elif ch == "3":
             hdr("Presets")
@@ -542,9 +610,13 @@ def polyprotic():
             try:
                 idx = int(ps) - 1
             except:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             if idx < 0 or idx >= len(PRESET_NAMES):
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             hdr(PRESET_NAMES[idx])
             print("Ka1=" + fmt(PRESET_KA1[idx]))
             print("Ka2=" + fmt(PRESET_KA2[idx]))
@@ -552,10 +624,11 @@ def polyprotic():
                 print("Ka3=" + fmt(PRESET_KA3[idx]))
             c = get_float("Concentration (M): ")
             if c is None or c <= 0:
-                print("Invalid."); pause(); continue
+                print("Invalid.")
+                pause()
+                continue
             if PRESET_KA3[idx] > 0:
-                _triprotic(PRESET_KA1[idx], PRESET_KA2[idx],
-                           PRESET_KA3[idx], c)
+                _triprotic(PRESET_KA1[idx], PRESET_KA2[idx], PRESET_KA3[idx], c)
             else:
                 _diprotic(PRESET_KA1[idx], PRESET_KA2[idx], c)
 
@@ -619,17 +692,30 @@ def main():
         print("10.Reference")
         print("0.Quit")
         ch = input("Choice: ")
-        if   ch == "0":  clr(); print("Good luck!"); break
-        elif ch == "1":  ph_basics()
-        elif ch == "2":  strong_acids()
-        elif ch == "3":  strong_bases()
-        elif ch == "4":  weak_acids()
-        elif ch == "5":  weak_bases()
-        elif ch == "6":  buffers()
-        elif ch == "7":  titrations()
-        elif ch == "8":  ka_kb_rel()
-        elif ch == "9":  polyprotic()
-        elif ch == "10": reference()
+        if ch == "0":
+            clr()
+            print("Good luck!")
+            break
+        elif ch == "1":
+            ph_basics()
+        elif ch == "2":
+            strong_acids()
+        elif ch == "3":
+            strong_bases()
+        elif ch == "4":
+            weak_acids()
+        elif ch == "5":
+            weak_bases()
+        elif ch == "6":
+            buffers()
+        elif ch == "7":
+            titrations()
+        elif ch == "8":
+            ka_kb_rel()
+        elif ch == "9":
+            polyprotic()
+        elif ch == "10":
+            reference()
         else:
             print("Invalid choice.")
             pause()
